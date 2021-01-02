@@ -132,7 +132,9 @@ handsfree = new Handsfree({
 handsfree.start()
 ```
 
-![](https://media2.giphy.com/media/xdcx0TLI7D7nS2SBTS/giphy.gif)
+![basic demo](https://media2.giphy.com/media/xdcx0TLI7D7nS2SBTS/giphy.gif)
+
+For the full list of config options you can pass into Handsfree, see: https://handsfree.js.org/ref/prop/config.html#the-full-list
 
 ### Working with the data
 
@@ -223,7 +225,50 @@ console.log(handsfree.data.hands)
 
 ## Updating models and plugins
 
-The real magic of Handsfree.js is its ability to _instantly_ swap out models and plugins. This is very useful if different routes in your app have different handsfree user experiences.
+The real magic of Handsfree.js is in its ability to _instantly_ swap out models and plugins. This is useful if different routes in your app have different handsfree user experiences. This is where the very powerful [handsfree.update(config)](https://handsfree.js.org/ref/method/update.html) comes into play. I use this everywhere on Handsfree.js.org to allow you to try out different demos without restarting the webcam.
+
+`handsfree.use` takes in the same [Config Object](https://handsfree.js.org/ref/prop/config.html#the-full-list) as when you instantiate Handsfree, but it does a few extra things:
+
+- It **stacks** changes, so if you only pass in `handsfree.update({facemesh: true})` while you have hands turned on then you'll end up with both
+- It automatically handles loading in any required models and dependencies
+- Gives you the ability to also configure plugins, or turn them off completely
+
+Here's an example
+
+```js
+// Start with hands
+const handsfree = new Handsfree({hands: true})
+handsfree.start()
+
+// Add facemesh
+handsfree.update({facemesh: true})
+
+// Replace both with pose
+handsfree.update({
+  hands: false,
+  facemesh: false,
+  pose: true
+})
+
+// Use Weboji and enable the Face Pointer plugins
+handsfree.update({
+  hands: false, facemesh: false, pose: false,
+  weboji: true,
+
+  plugin: {
+    // Enable some plugins
+    faceClick: true
+    faceScroll: true,
+    // Update the special .config properties of the plugins (this is so magical!)
+    facePointer: {
+      speed: {
+        x: 2,
+        y: 2
+      }
+    },
+  }
+})
+```
 
 ## Outline
 - What is Handsfree.js
