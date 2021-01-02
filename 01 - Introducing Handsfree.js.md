@@ -70,6 +70,78 @@ There's so much more that you can do! Here are some other experiments like my Ha
 
 ## Getting Started
 
+### Initializing and starting Handsfree
+
+The easiest way to get started is with a CDN. You can create an HTML file and copy/paste this in without the need for a server:
+
+```html
+<head>
+  <!-- Import helper classes and styles -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/handsfree@8.1.1/build/lib/assets/handsfree.css" />
+</head>
+<body>
+  <!-- Import Handsfree.js in body (as it adds body classes) -->
+  <script src="https://unpkg.com/handsfree@8.1.1/build/lib/handsfree.js"></script>
+
+  <script>
+    // Use the hand with defaults
+    handsfree = new Handsfree({hands: true})
+
+    // Start webcam and tracking (personally, I always like to ask first)
+    handsfree.start()
+  </script>
+</body>
+```
+
+You can also use import with NPM. By default this will still load the models from a CDN as they are quite large (some are over 10Mb), but I have instructions for ejecting the models into your assets folder here: [https://handsfree.js.org/#hosting-the-models-yourself](https://handsfree.js.org/#hosting-the-models-yourself)
+
+```bash
+npm i handsfree
+```
+
+```js
+handsfree = new Handsfree({
+  // Use the hand model with custom config
+  hands: {
+    // Always make sure to enable them
+    enabled: true,
+    
+    // Let's track up to 4 hands. It's best to be kind and ask permission first tho!
+    maxNumHands: 4,
+  }
+})
+
+// Start webcam and tracking (personally, I always like to ask first)
+handsfree.start()
+```
+
+### Working with the data
+
+There are two main ways to work with Handsfree.js. My preferred way is to create plugins using [handsfree.use(newPluginName, callback)](https://handsfree.js.org/ref/method/use.html). I call them plugins because they "plug into" the main loop that's started when you run `handsfree.start()`.
+
+Plugins run their `callback` on every webcam frame and receive all the data from all the running computer vision models. Here's a very simple plugin that simply console logs data:
+
+```js
+// Let's use our hands and face
+handsfree = new Handsfree({hands: true})
+handsfree.start()
+
+// Let's log the data
+handsfree.use('logger', (data) => {
+  console.log(data.hands)
+})
+```
+
+If you need more advanced functionality then you can pass an object with specific hooks that'll run during various phases of the plugin. For example:
+
+```js
+handsfree.use('advancedLogger', {
+  
+})
+```
+
 ## Outline
 - What is Handsfree.js
 - Examples
