@@ -2,9 +2,13 @@
 
 ![Handsfree.js](https://media1.giphy.com/media/BBcnSU1IJ5tpQbwXDI/giphy.gif)
 
-Hello and thank you for checking out this blog, I'm so excited to share what I've been working on! But before I dive into talking about what Handsfree.js is and how you can get started, I thought I'd show you some things I've made with it first!
+Hello and thank you for checking out this introductory post, I'm so excited to share Handsfree.js with you! Handsfree.js is a client side library that helps you add hand, face, and pose estimation to your front end projects in a snap ✨👌
 
-Don't worry if this post feels overwhelming, especially the getting started section. I'll be releasing a series of tutorials, at about one a week this year! For a complete reference guide, see [Handsfree.js.org](https://handsfree.js.org)
+Since this is an introductory post, I'll start by sharing some of the things I've made with it so that you can get an idea of what's possible. Once I've hopefully hyped you up a bit I'll then show you how to get started!
+
+Handsfree.js can help you do quite a bit, and I'm using it to completely and totally handsfree-ify the web and therefore entire world around us. You can see how I plan to do that in my [Master Plan](https://handsfree.js.org/about/#master-plan) or you can see me actually doing it on [Twitter @Midiblocks](https://twitter.com/midiblocks).
+
+OK! Let me show you what you can do with Handsfree.js ✨
 
 ---
 
@@ -12,7 +16,7 @@ Don't worry if this post feels overwhelming, especially the getting started sect
 
 ### Use it to trigger events
 
-Just today I released the [Pincher Plugin](https://handsfree.js.org/ref/plugin/pinchers.html) which emits 24+ pinching events with 3 states - `start`, `held`, `released` - for pinching with your index, middle, ring, and pinky fingers. It's modelled after the Mouse Events and you can listen to them similarly with `document.addEventListener()`: https://handsfree.js.org/ref/plugin/pinchers.html
+Just yesterday I released the [Pincher Plugin](https://handsfree.js.org/ref/plugin/pinchers.html) which emits 24+ pinching events with 3 states - `start`, `held`, `released` - for pinching with your index, middle, ring, and pinky fingers. It's modelled after the Mouse Events and you can listen to them similarly with `document.addEventListener()`: https://handsfree.js.org/ref/plugin/pinchers.html
 
 ![Pincher Plugin](https://media3.giphy.com/media/IHcXdVDrnpVnZqwq4z/giphy.gif)
 
@@ -24,7 +28,7 @@ Here's a Browser Extension I'm working on that helps you scroll websites handsfr
 
 ### Use it to create new kinds of Assistive Technologies
 
-This is one of my favorites, and it uses the ["Face Pointer" plugin](https://handsfree.js.org/ref/plugin/facePointer.html) to allow you to move a pointer with your face, scroll pages, and click on things. It's powered by the [Jeeliz Weboji model](https://handsfree.js.org/ref/model/weboji.html)
+This is one of my favorites, and it uses the ["Face Pointer" plugin](https://handsfree.js.org/ref/plugin/facePointer.html) to allow you to move a pointer with your face, scroll pages, and click on things. It's powered by the [Jeeliz Weboji model](https://handsfree.js.org/ref/model/weboji.html) and a few face plugins.
 
 ![Face Pointers](https://media0.giphy.com/media/Iv2aSMS0QTy2P5JNCX/giphy.gif)
 
@@ -40,7 +44,7 @@ Here's me playing "Into the Breach" on my desktop with Face Pointers and Hand Po
 
 ### Use it to make your own games
 
-But why just play games when you can make them too!? Here are a few games I've made, which I plan on grouping together into a "Mario Party" like game where you roll dice to move on a board and then play minigames with your friends at the end of each round.
+But why just play games when you can make them too!? Here are a few games I've made, which I plan on grouping together into a "Mario Party" like game where you roll dice to move on a board and then play these minigames with your friends at the end of each round.
 
 Here is "DuckFace Hunt", "Flappy Pose", and "Handsfree Jenga":
 
@@ -60,7 +64,7 @@ Of course, you're not limited to controlling things on the web or even desktop. 
 
 ### Use it for art, music, and other experiences
 
-There's so much more that you can do! Here are some other experiments like my Handsfree Psychedelic Art Maker and WebXR DevTools so that you can work on WebXR apps without XR equipment:
+There's so much more that you can do! Here are some other experiments like my upcoming "Diffusionist" app designed to help you make trippy art to the beat of music ([check out my brand new Instagram for the audio version](https://www.instagram.com/p/CJbuxr_hpLH/)). I'm also making a WebXR DevTools Chrome Extension so that you can work on WebXR apps handsfree without XR equipment:
 
 ![Diffusionist](https://media0.giphy.com/media/erAsyoAJukeBfS9ila/giphy.gif)
 
@@ -72,9 +76,13 @@ There's so much more that you can do! Here are some other experiments like my Ha
 
 ## Getting Started
 
+Great! So now that I've shown you a little of what you can do, let me show you how. Don't worry if this is overwhelming at first, it's more of an overview. I'll have lots of shorter and more focused tutorials coming soon 🙏
+
+If you [clone my repo](https://github.com/midiblocks/handsfree) (and please give it a star 🤗) you can find a boilerplate in `/boilerplate/cdn.html`. I'll have many more soon 😊
+
 ### Initializing and starting Handsfree
 
-The easiest way to get started is with a CDN. You can create an HTML file and copy/paste this in without the need for a server:
+The easiest way to get started is with a CDN. If you'd like, you can create an HTML file and copy/paste this in without the need for a server:
 
 ```html
 <head>
@@ -88,8 +96,11 @@ The easiest way to get started is with a CDN. You can create an HTML file and co
   <script src="https://unpkg.com/handsfree@8.1.1/build/lib/handsfree.js"></script>
 
   <script>
-    // Use the hand with defaults
-    handsfree = new Handsfree({hands: true})
+    // Use the hand with defaults (and show the webcam with wireframes)
+    handsfree = new Handsfree({
+      showDebug: true,
+      hands: true
+    })
 
     // Start webcam and tracking (personally, I always like to ask first)
     handsfree.start()
@@ -97,7 +108,7 @@ The easiest way to get started is with a CDN. You can create an HTML file and co
 </body>
 ```
 
-You can also use import with NPM. By default this will still load the models from a CDN as they are quite large (some are over 10Mb), but I have instructions for ejecting the models into your assets folder here: [https://handsfree.js.org/#hosting-the-models-yourself](https://handsfree.js.org/#hosting-the-models-yourself)
+You can also import with NPM. By default this will still load the models from a CDN as they are quite large (some are over 10Mb), but I have instructions for ejecting the models into your assets folder here: [https://handsfree.js.org/#hosting-the-models-yourself](https://handsfree.js.org/#hosting-the-models-yourself)
 
 ```bash
 npm i handsfree
@@ -105,6 +116,8 @@ npm i handsfree
 
 ```js
 handsfree = new Handsfree({
+  showDebug: true,
+  
   // Use the hand model with custom config
   hands: {
     // Always make sure to enable them
@@ -118,6 +131,10 @@ handsfree = new Handsfree({
 // Start webcam and tracking (personally, I always like to ask first)
 handsfree.start()
 ```
+
+In both cases, you'll get this:
+
+
 
 ### Working with the data
 
@@ -202,6 +219,10 @@ You can also access the data directly on your `handsfree` instance:
 ```js
 console.log(handsfree.data.hands)
 ```
+
+## Updating models and plugins
+
+The real magic of Handsfree.js is its ability to _instantly_ swap out models and 
 
 ## Outline
 - What is Handsfree.js
