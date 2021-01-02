@@ -223,6 +223,8 @@ Also, know that you can always access the data directly on your `handsfree` inst
 console.log(handsfree.data.hands)
 ```
 
+---
+
 ## Updating models and plugins
 
 The real magic of Handsfree.js is in its ability to _instantly_ swap out models and plugins. This is useful if different routes in your app have different handsfree user experiences. This is where the very powerful [handsfree.update(config)](https://handsfree.js.org/ref/method/update.html) comes into play. I use this everywhere on Handsfree.js.org to allow you to try out different demos without restarting the webcam.
@@ -270,11 +272,46 @@ handsfree.update({
 })
 ```
 
-## Outline
-- What is Handsfree.js
-- Examples
-- Getting started - setup
-- Plugins
-- Updating
-- Roadmap and goals
-- Discussion, Social Media, and Discord links
+You can also bulk disable and enable plugins, even by tag:
+
+```js
+// Disable and enable them all
+handsfree.disablePlugins()
+handsfree.enablePlugins()
+
+// Disable all the "core" tagged plugins
+handsfree.disablePlugins('core')
+
+// Enable handsfree "browser" tagged plugins
+handsfree.enablePlugins('browser')
+```
+
+Each of the [current plugins](https://handsfree.js.org/ref/plugin/) has a set of configs that you can update in real time. Just access their `.config` by name:
+
+```js
+// Change the Face Pointer speed
+handsfree.plugin.facePointer.config.speed.x = 2
+handsfree.plugin.facePointer.config.speed.y = 2
+
+// Set the threshold for how much you have to smile to click (0 - 1)
+handsfree.plugin.faceClick.config.morphs[0] = .25
+```
+
+---
+
+## Classes
+
+Anytime something happens within Handsfree.js, a class is added to the `document.body`. This makes styling your app or showing and hiding elements based on the state super easy. Here are where you can find them:
+
+- Generic classes: https://handsfree.js.org/ref/util/classes.html
+- Pinching states: https://handsfree.js.org/ref/plugin/pinchers.html#classes
+
+---
+
+## Thanks for reading 🙏
+
+So that about covers the basics! I know that might have been overwhelming, but one of my New Year Resolutions is to write more and so I'll be releasing smaller, more focused tutorials about once a week covering one specific topic at a time.
+
+I start my 2nd residency at the [STUDIO for Creative Inquiry](https://studioforcreativeinquiry.org/) this month where I'll be exploring new ways to apply Handsfree.js. It's my full time thing so please leave me a comment below or [stop by my Discord](https://discord.gg/q96txF5Wf5) so that I can help you integrate Handsfree.js in new and creative ways. 
+
+If you'd like to learn a little bit about my story and what inspired me on this path 3 years ago, do check out my [GitHub Sponsors](https://github.com/sponsors/midiblocks). Thank you so much for reading this introduction, I can't wait to see what you do with [Handsfree.js](https://handsfree.js.org) 🖐👀🖐
