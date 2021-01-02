@@ -4,6 +4,8 @@
 
 Hello and thank you for checking out this blog, I'm so excited to share what I've been working on! But before I dive into talking about what Handsfree.js is and how you can get started, I thought I'd show you some things I've made with it first!
 
+Don't worry if this post feels overwhelming, especially the getting started section. I'll be releasing a series of tutorials, at about one a week this year! For a complete reference guide, see [Handsfree.js.org](https://handsfree.js.org)
+
 ---
 
 ## Examples
@@ -130,21 +132,82 @@ handsfree.start()
 
 // Let's log the data
 handsfree.use('logger', (data) => {
+  // Always bail if we don't have our data
+  // (incase we may turn off hand tracking or no hands are detected)
+  if (!data.hands) return
+
+  // Log the data  
   console.log(data.hands)
+
+  // Do something if we are pinching with left [0] pinky [3]
+  if (data.hands.pinchState[0][3] === 'held') {
+    console.log('pinching with left pinky')
+  }
 })
+```
+
+Once you create a plugin, it becomes accessible at `handsfree.plugin.pluginName` and comes with a few methods and properties. Most importantly, they get a `.disable()` and `.enable()` method:
+
+```js
+handsfree.plugin.logger.enable()
+handsfree.plugin.logger.disable()
+
+// This is what the callback gets mapped to,
+// and is what gets called on every frame that this plugin is enabled
+handsfree.plugin.logger.onFrame
 ```
 
 If you need more advanced functionality then you can pass an object with specific hooks that'll run during various phases of the plugin. For example:
 
 ```js
 handsfree.use('advancedLogger', {
+  // True by default
+  enabled: true,
+
+  // A list of strings for tagging this plugin.
+  // Later you can bulk disable/enable these with: handsfree.enablePlugins(['tag1', 'tag2'])
+  tags: [],
   
+  // This special property can be adjusted later (or even before!) in various ways
+  config: {},
+  
+  // Called immediately after the plugin is added, even if disabled
+  // The `this` context is the plugin itself: handsfree.plugin.advancedLogger
+  onUse () {},
+  
+  // Called when you .enable() this plugin
+  onEnabled () {},
+  // Called when you .disable() this plugin
+  onEnabled () {}
 })
+```
+
+### Using data without plugins
+
+Sometimes you may only want to track just one frame, or may be in a part of your app where you don't easily have access to your `handsfree`. In these cases, you can just listen to events on the `document`:
+
+```js
+// This will get called on every frame
+document.addEventListener('handsfree-data', ev => console.log(ev.detail.data))
+
+// Listen to when the thumb and index (0) are pinched on any hand
+document.addEventListener('handsfree-finger-pinched-0')
+
+// Listen to when the right (1) thumb and pinky (3) are pinched
+document.addEventListener('handsfree-finger-pinched-1-3')
+```
+
+You can also access the data directly on your `handsfree` instance:
+
+```js
+console.log(handsfree.data.hands)
 ```
 
 ## Outline
 - What is Handsfree.js
 - Examples
-- Getting started
+- Getting started - setup
+- Plugins
+- Updating
 - Roadmap and goals
 - Discussion, Social Media, and Discord links
