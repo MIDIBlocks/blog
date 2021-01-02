@@ -132,25 +132,23 @@ handsfree = new Handsfree({
 handsfree.start()
 ```
 
-In both cases, you'll get this:
-
-
+![](https://media2.giphy.com/media/xdcx0TLI7D7nS2SBTS/giphy.gif)
 
 ### Working with the data
 
-There are two main ways to work with Handsfree.js. My preferred way is to create plugins using [handsfree.use(newPluginName, callback)](https://handsfree.js.org/ref/method/use.html). I call them plugins because they "plug into" the main loop that's started when you run `handsfree.start()`.
+Of course that'll just show the wireframes over your hands, but it won't actually do anything yet. There are two main ways to work with Handsfree.js, and my preferred way is by creating plugins using [handsfree.use(newPluginName, callback)](https://handsfree.js.org/ref/method/use.html). I call them plugins because they "plug into" the main webcam loop that's started when you run `handsfree.start()`.
 
-Plugins run their `callback` on every webcam frame and receive all the data from all the running computer vision models. Here's a very simple plugin that simply console logs data:
+Plugins run their `callback` on every webcam frame and receive all the data from all the running computer vision models. Here's a very simple plugin that simply console logs data. I'll call it "logger":
 
 ```js
-// Let's use our hands and face
-handsfree = new Handsfree({hands: true})
+// Let's use our hands again
+handsfree = new Handsfree({showDebug: true, hands: true})
 handsfree.start()
 
-// Let's log the data
+// Let's create a plugin called "logger" to console.log the data
 handsfree.use('logger', (data) => {
-  // Always bail if we don't have our data
-  // (incase we may turn off hand tracking or no hands are detected)
+  // I like to always bail if there's no data,
+  // which might happen if you swap out hands for the face later on
   if (!data.hands) return
 
   // Log the data  
@@ -163,7 +161,7 @@ handsfree.use('logger', (data) => {
 })
 ```
 
-Once you create a plugin, it becomes accessible at `handsfree.plugin.pluginName` and comes with a few methods and properties. Most importantly, they get a `.disable()` and `.enable()` method:
+Once you create a plugin, it becomes available at `handsfree.plugin.pluginName` and comes with a few methods and properties. Most importantly, they get a `.disable()` and `.enable()` method:
 
 ```js
 handsfree.plugin.logger.enable()
@@ -190,6 +188,7 @@ handsfree.use('advancedLogger', {
   
   // Called immediately after the plugin is added, even if disabled
   // The `this` context is the plugin itself: handsfree.plugin.advancedLogger
+  // If you need to create DOM elements or other setup, this is the method to do it in
   onUse () {},
   
   // Called when you .enable() this plugin
@@ -201,7 +200,9 @@ handsfree.use('advancedLogger', {
 
 ### Using data without plugins
 
-Sometimes you may only want to track just one frame, or may be in a part of your app where you don't easily have access to your `handsfree`. In these cases, you can just listen to events on the `document`:
+Sometimes you may only want to track just one frame, or use an image, canvas, or video element instead of a webcam, or you might be in a part of your app where you don't easily have access to your `handsfree` (like in node module). In these cases, you can just listen to events on the `document`.
+
+Because these are events, the data you want is always in `ev.detail.data`
 
 ```js
 // This will get called on every frame
@@ -214,7 +215,7 @@ document.addEventListener('handsfree-finger-pinched-0')
 document.addEventListener('handsfree-finger-pinched-1-3')
 ```
 
-You can also access the data directly on your `handsfree` instance:
+Also, know that you can always access the data directly on your `handsfree` instance:
 
 ```js
 console.log(handsfree.data.hands)
@@ -222,7 +223,7 @@ console.log(handsfree.data.hands)
 
 ## Updating models and plugins
 
-The real magic of Handsfree.js is its ability to _instantly_ swap out models and 
+The real magic of Handsfree.js is its ability to _instantly_ swap out models and plugins. This is very useful if different routes in your app have different handsfree user experiences.
 
 ## Outline
 - What is Handsfree.js
